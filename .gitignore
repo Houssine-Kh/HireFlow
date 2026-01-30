@@ -1,0 +1,23 @@
+# --- .NET Core ---
+[Bb]in/
+[Oo]bj/
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.launchSettings.json
+appsettings.Development.json
+
+# --- Angular ---
+node_modules/
+dist/
+.angular/
+.editorconfig
+.cache/
+tmp/
+*.log
+
+# --- OS / System ---
+.DS_Store
+Thumbs.db

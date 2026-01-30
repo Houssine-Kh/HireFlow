@@ -1,0 +1,95 @@
+<div class="p-6 bg-surface-50 min-h-screen"> <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-surface-900">User Management</h1>
+            <p class="text-surface-500">Manage candidates, recruiters, and approvals.</p>
+        </div>
+        
+        <p-iconfield iconPosition="left">
+            <p-inputicon styleClass="pi pi-search" />
+            <input 
+                pInputText 
+                type="text" 
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
+                placeholder="Search users..." 
+                class="w-full md:w-64" />
+        </p-iconfield>
+    </div>
+
+    <div class="card bg-surface-0 border border-surface-200 rounded-xl shadow-sm overflow-hidden">
+        <p-table 
+            #dt 
+            [value]="users" 
+            [rows]="10" 
+            [paginator]="true"
+            [globalFilterFields]="['name', 'email', 'role']"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            styleClass="p-datatable-sm">
+            
+            <ng-template pTemplate="header">
+                <tr class="bg-surface-50 text-surface-500 text-sm uppercase tracking-wider">
+                    <th pSortableColumn="name" style="width:25%">Name <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="email" style="width:25%">Email <p-sortIcon field="email"></p-sortIcon></th>
+                    <th pSortableColumn="role" style="width:15%">Role <p-sortIcon field="role"></p-sortIcon></th>
+                    <th pSortableColumn="status" style="width:15%">Status <p-sortIcon field="status"></p-sortIcon></th>
+                    <th style="width:20%" class="text-right">Actions</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-user>
+                <tr class="hover:bg-surface-50 transition-colors border-b border-surface-100">
+                    
+                    <td class="font-medium text-surface-900">
+                        {{ user.name }}
+                    </td>
+                    
+                    <td class="text-surface-600">
+                        {{ user.email }}
+                    </td>
+
+                    <td>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                            [class.bg-primary-100]="user.role === 'Recruiter'"
+                            [class.text-primary-700]="user.role === 'Recruiter'"
+                            
+                            [class.bg-surface-100]="user.role === 'Candidate'"
+                            [class.text-surface-700]="user.role === 'Candidate'"
+                            
+                            [class.bg-purple-100]="user.role === 'Admin'"
+                            [class.text-purple-700]="user.role === 'Admin'">
+                            {{ user.role }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <p-tag [value]="user.status" [severity]="getSeverity(user.status)" [rounded]="true"></p-tag>
+                    </td>
+
+                    <td class="text-right"> <div class="flex items-center justify-end gap-2"> <p-button 
+                                *ngIf="user.role === 'Recruiter' && user.status === 'Pending'"
+                                label="Approve" 
+                                icon="pi pi-check" 
+                                size="small" 
+                                severity="success" 
+                                [text]="true"
+                                (onClick)="approveRecruiter(user)">
+                            </p-button>
+
+                            <p-menu #menu [model]="items" [popup]="true" appendTo="body"></p-menu>
+
+                            <p-button 
+                                icon="pi pi-ellipsis-v" 
+                                [rounded]="true" 
+                                [text]="true" 
+                                severity="secondary"
+                                (onClick)="setSelectedUser(user); menu.toggle($event)"
+                                pTooltip="More options"
+                                tooltipPosition="left">
+                            </p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<p-confirm-dialog></p-confirm-dialog>

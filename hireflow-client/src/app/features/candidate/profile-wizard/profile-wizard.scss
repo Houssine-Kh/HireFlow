@@ -1,0 +1,5 @@
+/* Hide the default PrimeNG number indicator */
+:host ::ng-deep .p-step-number {
+    display: none !important;
+}
+
