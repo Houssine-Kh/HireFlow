@@ -18,23 +18,23 @@ namespace HireFlow.Domain.Users.Entities
         public Email Email { get; private set; } = default!;
         public UserRole Role { get; private set; }
 
-        public bool IsApproved {get; private set; }
+        public UserStatus Status { get; private set; }
 
         private User() { } // EF
-            
-        private User(Guid id, PersonName name,Email email ,UserRole role)
+
+        private User(Guid id, PersonName name, Email email, UserRole role)
         {
             Id = id;
             Name = name;
             Email = email;
             Role = role;
-            IsApproved = role != UserRole.Recruiter;   // Recruiters are FALSE (Pending), Candidates are TRUE (Active)
+            Status = (role == UserRole.Recruiter) ? UserStatus.Pending : UserStatus.Active;    // Recruiters start as Pending, Candidates start as Active
         }
 
-        public static User Create(Guid id, PersonName name,Email email ,UserRole role)
+        public static User Create(Guid id, PersonName name, Email email, UserRole role)
         {
-            var user = new User(id,name,email,role);
-            if(role == UserRole.Recruiter)
+            var user = new User(id, name, email, role);
+            if (role == UserRole.Recruiter)
             {
                 user.AddDomainEvent(new RecruiterSubmittedForApprovalEvent(
                     user.Id,
@@ -52,21 +52,29 @@ namespace HireFlow.Domain.Users.Entities
         public void ApproveRecruiter()
         {
             if (Role != UserRole.Recruiter)
-            {
                 throw new DomainException("Only recruiters need approval.");
-            }
-            if (IsApproved) 
-            {
+        
+            if (Status == UserStatus.Active)
                 // Idempotency check: If already approved, do nothing or warn
-                return; 
-            }
-            IsApproved = true;
+                return;
+            
+            Status = UserStatus.Active;
         }
 
-        // Reject/ban
-        public void Deactivate()
+        public void Ban()
         {
-            IsApproved = false;
-        } 
+            if (Status == UserStatus.Banned)
+                return;
+            
+            Status = UserStatus.Banned;
+        }
+
+        public void unlock()
+        {
+            if (Status != UserStatus.Banned)
+                throw new DomainException("Only banned users can be unlocked.");
+
+            Status = UserStatus.Active;
+        }
     }
 }

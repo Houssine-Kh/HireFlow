@@ -16,8 +16,8 @@ namespace HireFlow.Application.Common.Models
             Error = error;
         }
 
-        public static Result Ok() => new Result(true, null);  // static so we can call this methods in the services without necessary creating an instance of the class 
-        public static Result Fail(string error) => new Result(false, error);
+        public static Result Ok() => new(true, null);  // static so we can call this methods in the services without necessary creating an instance of the class 
+        public static Result Fail(string error) => new(false, error);
 
     }
     public class Result<T> : Result
@@ -27,8 +27,8 @@ namespace HireFlow.Application.Common.Models
         {
             Value = value;
         }
-        public static Result<T> Ok(T value) => new Result<T>(true, null, value);
-        public static new Result<T> Fail(string error) => new Result<T>(false, error, default); //new ignores the compiler warning
+        public static Result<T> Ok(T value) => new(true, null, value);
+        public static new Result<T> Fail(string error) => new(false, error, default); 
 
     }
 }

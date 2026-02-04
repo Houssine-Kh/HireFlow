@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.Validators;
 
-namespace HireFlow.Application.Users.Commands.Login
+namespace HireFlow.Application.Users.Auth.Commands.Login
 {
     public class LoginCammandValidator : AbstractValidator<LoginCommand>
     {

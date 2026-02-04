@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using HireFlow.Application.Users.Dtos;
+using HireFlow.Application.Users.Auth.Dtos;
 using HireFlow.Application.Common.Interfaces.Auth;
 using HireFlow.Application.Common.Models;
 using HireFlow.Domain.Users.Entities;
@@ -12,11 +12,9 @@ using HireFlow.Domain.Users.ValueObjects;
 using HireFlow.Domain.Users.Enums;
 
 using MediatR;
-using System.Data;
 using HireFlow.Application.Common.Interfaces.Persistence;
-using System.Transactions;
 
-namespace HireFlow.Application.Users.Commands.Register
+namespace HireFlow.Application.Users.Auth.Commands.Register
 {
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result<AuthResponseDto>>
     {
@@ -34,22 +32,22 @@ namespace HireFlow.Application.Users.Commands.Register
         }
         public async Task<Result<AuthResponseDto>> Handle(RegisterCommand request, CancellationToken ct)
         {
-            // Transaction Scope ensures both Identity and Domain user are created, or NEITHER is.
-            using  var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            try
-            {
                 if (await _identityService.EmailExists(request.Email))
                 {
                     return Result<AuthResponseDto>.Fail("user with this email already exists.");
                 }
-                var userId = await _identityService.CreateIdentityUser(request.FirstName,
+                var identityResult = await _identityService.CreateIdentityUser(request.FirstName,
                     request.LastName,
                     request.Email,
                     request.Password,
                     request.Role.ToString()
                 );
 
-                bool isActive = request.Role != UserRole.Recruiter;
+                if(!identityResult.IsSuccess){
+                    return Result<AuthResponseDto>.Fail("Failded to create identity user."+identityResult.Error);
+                }
+                
+                var userId = identityResult.Value;
 
                 var domainUser = User.Create(
                     userId,
@@ -62,9 +60,8 @@ namespace HireFlow.Application.Users.Commands.Register
 
                 await _unitOfWork.SaveChangesAsync(ct);
 
-                transaction.Complete();
 
-                if(request.Role == UserRole.Recruiter)
+                if(domainUser.Status == UserStatus.Pending)
                 {
                     return Result<AuthResponseDto>.Ok(new AuthResponseDto(
                         userId,
@@ -86,11 +83,7 @@ namespace HireFlow.Application.Users.Commands.Register
                     token,
                     domainUser.Role.ToString())
                     );
-            }
-            catch (Exception)
-            {
-                return Result<AuthResponseDto>.Fail("Registration failed due to an internal error.");
-            }
+       
         }
 
     }

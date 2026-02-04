@@ -10,5 +10,7 @@ namespace HireFlow.Application.Common.Interfaces.Persistence
     {
         Task AddAsync(User user);
         Task<User?> GetByIdAsync(Guid id);
+        Task<List<User>> GetAllAsync();
+        void Delete(User user);
     }
 }

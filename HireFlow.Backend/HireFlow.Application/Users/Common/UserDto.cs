@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HireFlow.Domain.Users.Enums;
 
-namespace HireFlow.Application.Users.Dtos
+namespace HireFlow.Application.Users.Common
 {
-    public record AuthResponseDto(
+    public record UserDto(
         Guid Id,
         string FirstName,
         string LastName,
         string Email,
-        string? Token,
         string Role,
-        string ? Message = null,
-        bool ProfileIsComplete = false
+        UserStatus Status
     );
+
 }

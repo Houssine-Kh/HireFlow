@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 
-namespace HireFlow.Application.Users.Commands.Register
+namespace HireFlow.Application.Users.Auth.Commands.Register
 {
     public class RegsiterCommandValidator : AbstractValidator<RegisterCommand>
     {

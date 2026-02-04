@@ -1,6 +1,6 @@
 
 using HireFlow.Application.Common.Interfaces.Auth;
-
+using HireFlow.Application.Common.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace HireFlow.Infrastructure.Identity
@@ -30,7 +30,7 @@ namespace HireFlow.Infrastructure.Identity
             return user?.Id ?? Guid.Empty ;
     
         }
-        public async Task<Guid> CreateIdentityUser(string firstName, string lastName, string email, string Password, string role)
+        public async Task<Result<Guid>> CreateIdentityUser(string firstName, string lastName, string email, string Password, string role)
         {
             var appUser = new AppUser
             {
@@ -42,10 +42,11 @@ namespace HireFlow.Infrastructure.Identity
             var result = await _userManager.CreateAsync(appUser,Password);
             if(!result.Succeeded)
             {
-                throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+                return Result<Guid>.Fail(string.Join(", ",result.Errors.Select(e => e.Description)));
             }
             await _userManager.AddToRoleAsync(appUser, role); 
-            return appUser.Id;
+            
+            return Result<Guid>.Ok(appUser.Id);
         }
         public async Task<bool> CheckPassword( Guid UserId,string Password)
         {
@@ -61,6 +62,24 @@ namespace HireFlow.Infrastructure.Identity
 
             var roles = await _userManager.GetRolesAsync(user);
             return roles.FirstOrDefault() ?? "Candidate";
+        }
+
+        public async Task<Result> DeleteIdentityUser(Guid userId)
+        {
+            var IdentityUser = await _userManager.FindByIdAsync(userId.ToString());
+
+            if(IdentityUser == null)
+            return Result.Ok();
+
+            var result = await _userManager.DeleteAsync(IdentityUser);
+
+            if (!result.Succeeded)
+            {
+                var errorDescripton = string.Join(",",result.Errors.Select(e => e.Description ));
+                return Result.Fail(errorDescripton);
+            }
+            return Result.Ok();
+
         }
     }
 }
