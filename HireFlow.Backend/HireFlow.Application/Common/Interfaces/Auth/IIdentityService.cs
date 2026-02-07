@@ -12,6 +12,7 @@ namespace HireFlow.Application.Common.Interfaces.Auth
     {
         Task<bool> EmailExists(string email);
         Task<Guid> GetIdentityUserIdByEmail(string email);
+        Task<IList<string>> GetRolesAsync(Guid userId);
         Task<Result<Guid>> CreateIdentityUser(string firstName, string lastName, string email, string Password, string role);
         Task<bool> CheckPassword( Guid UserId,string Password);
         Task<string> GetUserRole(Guid userId);

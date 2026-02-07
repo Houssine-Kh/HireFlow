@@ -41,6 +41,15 @@ namespace HireFlow.Application.Users.Auth.Commands.Login
             var IsValid = await  _identityService.CheckPassword(userId,request.Password);
             if (!IsValid)
                 return Result<AuthResponseDto>.Fail("Invalid Email Or Password.");
+                
+            var roles = await _identityService.GetRolesAsync(userId);
+
+            if (roles.Contains("Admin"))
+            {
+                var admintoken = _tokenService.CreateToken(userId, request.Email, "Admin");   
+                return Result<AuthResponseDto>.Ok(new AuthResponseDto(userId,"System","Admin",request.Email,admintoken,"Admin", ProfileIsComplete : true ))   ;        
+            }
+
 
             var domainUser = await _userRepository.GetByIdAsync(userId);
 

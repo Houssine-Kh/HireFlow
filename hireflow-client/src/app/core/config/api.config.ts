@@ -8,9 +8,16 @@ export const API_CONFIG = {
     auth: {
       // Result: https://localhost:7266/api/auth/login
       login: '/auth/login',
-      
+
       // Result: https://localhost:7266/api/auth/register
       register: '/auth/register'
+    },
+ admin: {
+      getUsers: '/admin/users',                                      // GET /api/admin/users
+      approveRecruiter: (id: string) => `/admin/recruiters/${id}/approve`, // POST /api/admin/recruiters/{id}/approve
+      rejectRecruiter: (id: string) => `/admin/recruiters/${id}/reject`,   // POST /api/admin/recruiters/{id}/reject
+      banUser: (id: string) => `/admin/users/${id}/ban`,             // POST /api/admin/users/{id}/ban
+      unlockUser: (id: string) => `/admin/users/${id}/unlock`        // POST /api/admin/users/{id}/unlock
     },
     // Future placeholders based on your HireFlow domain
     users: {

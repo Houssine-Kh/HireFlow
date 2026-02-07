@@ -48,10 +48,28 @@ export const AuthStore = signalStore(
                   localStorage.setItem('token', response.token);
                   }
 
-                  if(response.role == 'Candidate'){
-                    if(!response.IsProfileComplete)
-                      router.navigate(['candidate/profile-wizard']);
-                  }
+              switch (response.role) {
+                  
+                  case 'Admin':
+                    router.navigate(['/admin/users']); 
+                    break;
+
+                  case 'Candidate':
+                    if (!response.IsProfileComplete) {
+                      router.navigate(['/candidate/profile-wizard']);
+                    } else {
+                     // router.navigate(['/candidate/dashboard']); 
+                    }
+                    break;
+
+                  case 'Recruiter':
+                    //router.navigate(['/recruiter/dashboard']); 
+                    break;
+
+                  default:
+                    router.navigate(['/']);
+                    break;
+                }
 
               },
               error: (err: HttpErrorResponse) => {

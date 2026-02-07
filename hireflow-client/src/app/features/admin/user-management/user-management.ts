@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -13,6 +13,13 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
+import { AdminStore } from '../../../infrastructure/admin/admin.store';
+import { UserDto } from '../../../domain/dtos/admin.dto';
+import { FeedbackService } from '../../../core/services/feedback.service';
+import { ToastModule } from 'primeng/toast';
+
+
+
 
 
 @Component({
@@ -22,81 +29,115 @@ import { MenuModule } from 'primeng/menu';
     CommonModule, FormsModule,
     TableModule, ButtonModule, TagModule, 
     InputTextModule, IconFieldModule, InputIconModule,
-    TooltipModule, ConfirmDialogModule,MenuModule
+    TooltipModule, ConfirmDialogModule,MenuModule,ToastModule
   ],
-  providers: [ConfirmationService, MessageService],
   templateUrl: './user-management.html',
 })
 export class UserManagement implements OnInit {
 
-  // This will eventually come from your AdminStore
-  users = [
-    { id: '1', name: 'Houssine Khafif', email: 'houssine@test.com', role: 'Candidate', status: 'Active' },
-    { id: '2', name: 'John Recruiter', email: 'john@company.com', role: 'Recruiter', status: 'Pending' }, // 👈 Needs Approval
-    { id: '3', name: 'Jane HR', email: 'jane@tech.com', role: 'Recruiter', status: 'Active' },
-    { id: '4', name: 'Admin User', email: 'admin@hireflow.com', role: 'Admin', status: 'Active' },
-  ];
+  readonly store = inject(AdminStore);
+  private readonly feedback = inject(FeedbackService);
 
-items: MenuItem[] | undefined;
-  selectedUser: any;
 
-  constructor(private confirmationService: ConfirmationService, private messageService: MessageService) {}
+  items: MenuItem[] | undefined;
+    selectedUser: UserDto | null = null;
 
-ngOnInit() {
-    this.items = [
-        {
-            label: 'Options',
-            items: [
-                {
-                    label: 'Edit',
-                    icon: 'pi pi-pencil',
-                    command: () => this.editUser(this.selectedUser)
-                },
-                {
-                    label: 'Reset Password',
-                    icon: 'pi pi-key',
-                },
-                {
-                    label: 'Deactivate',
-                    icon: 'pi pi-ban',
-                    styleClass: 'text-red-600' // Make it look dangerous
-                }
-            ]
-        }
-    ];
-  }
 
-  getSeverity(status: string) {
-    switch (status) {
-      case 'Active': return 'success'; // Green
-      case 'Pending': return 'warn';   // Orange
-      case 'Banned': return 'danger';  // Red
-      default: return 'info';
+  ngOnInit() {
+      this.store.loadUsers();
     }
-  }
 
-setSelectedUser(user: any) {
-    this.selectedUser = user;
-  }
-  
-  editUser(user: any) {
-      console.log('Editing', user.name);
-  }
-
-  approveRecruiter(user: any) {
-    this.confirmationService.confirm({
-      message: `Are you sure you want to approve <b>${user.name}</b> as a Recruiter?`,
-      header: 'Confirm Approval',
-      icon: 'pi pi-check-circle',
-      acceptButtonStyleClass: 'p-button-success p-button-text',
-      rejectButtonStyleClass: 'p-button-text p-button-plain',
-      accept: () => {
-        // TODO: Call your Store here: this.store.approveRecruiter(user.id);
-        
-        // Optimistic update for demo
-        user.status = 'Active'; 
-        this.messageService.add({ severity: 'success', summary: 'Approved', detail: `${user.name} is now active.` });
+    getSeverity(status: string) {
+      switch (status) {
+        case 'Active': return 'success'; // Green
+        case 'Pending': return 'warn';   // Orange
+        case 'Banned': return 'danger';  // Red
+        default: return 'info';
       }
-    });
-  }
+    }
+
+  setSelectedUser(user: any) {
+      this.selectedUser = user;
+      this.updateMenuOptions(user);  }
+      
+  updateMenuOptions(user: UserDto) {
+      this.items = [
+        {
+          label: 'Options',
+          items: [
+            {
+              label: 'Edit Profile',
+              icon: 'pi pi-pencil',
+              command: () => console.log('Edit', user.email)
+            },
+            {
+              label: 'Reset Password',
+              icon: 'pi pi-key',
+            },
+            user.status === 'Banned' 
+            ? {
+                label: 'Unlock Account',
+                icon: 'pi pi-lock-open',
+                styleClass: 'text-green-600',
+                command: () => this.confirmAction(user, 'unlock')
+              }
+            : {
+                label: 'Ban Account',
+                icon: 'pi pi-ban',
+                styleClass: 'text-red-600',
+                command: () => this.confirmAction(user, 'ban')
+              }
+          ]
+        }
+      ];
+    }
+
+  confirmAction(user: UserDto, action: 'approve' | 'ban' | 'unlock' | 'reject') {
+      let message = '';
+      let header = '';
+      let onAccept = () => {};
+
+      switch (action) {
+        case 'approve':
+          message = `Approve <b>${user.firstName}</b> as a Recruiter?`;
+          header = 'Confirm Approval';
+          onAccept = () => {
+            this.store.approveRecruiter(user.id);
+            this.feedback.success(`${user.firstName} is now active.`, 'Approved');
+          };
+          break;
+
+        case 'reject':
+          message = `Are you sure you want to <b>REJECT</b> the application for <b>${user.firstName}</b>?`;
+          header = 'Reject Application';
+          onAccept = () => {
+            this.store.rejectRecruiter(user.id);
+            this.feedback.info(`Application for ${user.firstName} was rejected.`);
+          };
+          break;
+
+        case 'ban':
+          message = `Are you sure you want to <b>BAN</b> ${user.firstName}?`;
+          header = 'Suspend Account';
+          onAccept = () => {
+            this.store.banUser(user.id);
+            // Using 'info' or 'success' here because the Admin action succeeded
+            this.feedback.success('User account has been locked.', 'Banned');
+          };
+          break;
+
+        case 'unlock':
+          message = `Restore access for <b>${user.firstName}</b>?`;
+          header = 'Restore Access';
+          onAccept = () => {
+            this.store.unlockUser(user.id);
+            this.feedback.success('User access restored.', 'Unlocked');
+          };
+          break;
+      }
+      // Call the wrapper function
+      this.feedback.confirm(message, onAccept, header);
+    }
+
+
 }

@@ -30,6 +30,16 @@ namespace HireFlow.Infrastructure.Identity
             return user?.Id ?? Guid.Empty ;
     
         }
+
+        public async Task<IList<string>> GetRolesAsync(Guid userId){
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+
+            if(user == null)
+                return new List<string>();
+
+            return  await _userManager.GetRolesAsync(user);
+        }
+
         public async Task<Result<Guid>> CreateIdentityUser(string firstName, string lastName, string email, string Password, string role)
         {
             var appUser = new AppUser

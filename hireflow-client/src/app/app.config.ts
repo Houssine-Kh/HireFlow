@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { HireFlowPreset } from './core/Theme/hireflow.preset';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 
 export const appConfig: ApplicationConfig = {
@@ -15,6 +16,8 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(
       withInterceptors([authInterceptor])
     ),
+    MessageService,
+    ConfirmationService,
     providePrimeNG({
     theme: {
         preset: HireFlowPreset,
@@ -25,8 +28,8 @@ export const appConfig: ApplicationConfig = {
                 name: 'primeng', // Matches the @layer name in styles.scss
                 order: 'tailwind-base, primeng, tailwind-utilities'
             }
-        }
-    }
-})
+        },
+      }
+    })
   ]
 };
