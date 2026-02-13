@@ -7,6 +7,7 @@ using HireFlow.Application.Common.Interfaces.Persistence;
 using HireFlow.Application.Common.Models;
 using HireFlow.Application.Users.Common;
 using HireFlow.Domain.Users.Entities;
+using HireFlow.Domain.Users.Repositories;
 using MediatR;
 
 namespace HireFlow.Application.Users.Admin.Queries.GetAllUsers

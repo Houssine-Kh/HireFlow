@@ -5,6 +5,7 @@ using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using HireFlow.Application.Common.Interfaces.Persistence;
 using HireFlow.Application.Common.Models;
+using HireFlow.Domain.Users.Repositories;
 using MediatR;
 using MediatR.Pipeline;
 

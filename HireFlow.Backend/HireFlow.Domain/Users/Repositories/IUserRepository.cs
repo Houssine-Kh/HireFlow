@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HireFlow.Domain.Users.Entities;
 
-namespace HireFlow.Application.Common.Interfaces.Persistence
+namespace HireFlow.Domain.Users.Repositories
 {
     public interface IUserRepository
     {

@@ -12,6 +12,7 @@ using MediatR;
 using HireFlow.Domain.Users.Enums;
 using System.Runtime.CompilerServices;
 using HireFlow.Domain.Candidates.Repositories;
+using HireFlow.Domain.Users.Repositories;
 
 namespace HireFlow.Application.Users.Auth.Commands.Login
 {

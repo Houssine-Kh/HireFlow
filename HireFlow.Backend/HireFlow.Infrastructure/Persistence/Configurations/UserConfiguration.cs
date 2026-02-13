@@ -46,6 +46,11 @@ namespace HireFlow.Infrastructure.Persistence.Configurations
                    .HasConversion<string>()
                    .HasMaxLength(50)
                    .IsRequired();
+
+            builder.Property(u => u.Status)                   
+                    .HasConversion<string>()
+                    .HasMaxLength(50)
+                    .IsRequired();
         }
     }
 }

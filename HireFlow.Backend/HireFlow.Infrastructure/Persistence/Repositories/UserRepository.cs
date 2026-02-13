@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HireFlow.Application.Common.Interfaces.Persistence;
 using HireFlow.Domain.Users.Entities;
+using HireFlow.Domain.Users.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace HireFlow.Infrastructure.Persistence.Repositories

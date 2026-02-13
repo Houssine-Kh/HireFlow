@@ -6,6 +6,7 @@ using HireFlow.Application.Common.Interfaces.Auth;
 using HireFlow.Application.Common.Interfaces.Persistence;
 using HireFlow.Application.Common.Models;
 using HireFlow.Domain.Users.Enums;
+using HireFlow.Domain.Users.Repositories;
 using MediatR;
 
 namespace HireFlow.Application.Users.Admin.Commands.RejectRecruiter

@@ -1,7 +1,9 @@
 using System.Text.Json.Serialization;
 using HireFlow.Api.ExceptionHandling;
 using HireFlow.Api.Middleware;
+using HireFlow.Api.Services;
 using HireFlow.Application;
+using HireFlow.Application.Common.Interfaces.Services;
 using HireFlow.Domain.Exceptions;
 using HireFlow.Infrastructure;
 using HireFlow.Infrastructure.Persistence;
@@ -42,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter 'Bearer' [space] and then your valid token.\nExample: \"Bearer eyJhbGciOi...\""
+        Description = "Just paste your JWT token here. Do NOT type 'Bearer '."
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -61,8 +63,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 }); // uses these infos to generate a full OpenApi specification(the Json behind swagger UI)
 
+// Required for accessing HttpContext outside Controllers
+builder.Services.AddHttpContextAccessor();
 
-
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 // Application (MediatR, Validators, Behaviors)
 builder.Services.AddApplication();

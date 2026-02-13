@@ -18,6 +18,8 @@ using HireFlow.Infrastructure.Persistence.Interceptors;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using HireFlow.Domain.Users.Repositories;
+using HireFlow.Domain.Jobs.Repositories;
 
 namespace HireFlow.Infrastructure
 {
@@ -72,6 +74,7 @@ namespace HireFlow.Infrastructure
             services.AddScoped<IIdentityService,IdentityService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICandidateRepository, CandidateRepository>();
+            services.AddScoped<IJobRepository, JobRepository>();
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             services.AddScoped<IEmailService, FileEmailService>();
 

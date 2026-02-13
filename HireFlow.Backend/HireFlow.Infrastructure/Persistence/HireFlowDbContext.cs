@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HireFlow.Domain.Candidates.Entities;
+using HireFlow.Domain.Jobs.Entities;
 using HireFlow.Domain.Users.Entities;
 using HireFlow.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +17,8 @@ namespace HireFlow.Infrastructure.Persistence
         public HireFlowDbContext(DbContextOptions<HireFlowDbContext> options) : base(options){}
         public DbSet<User> DomainUsers{get; set;}
         public DbSet<Candidate> Candidates{get; set;}
+        public DbSet<Job> Jobs {get; set;}
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -13,6 +13,7 @@ using HireFlow.Domain.Users.Enums;
 
 using MediatR;
 using HireFlow.Application.Common.Interfaces.Persistence;
+using HireFlow.Domain.Users.Repositories;
 
 namespace HireFlow.Application.Users.Auth.Commands.Register
 {
@@ -70,7 +71,8 @@ namespace HireFlow.Application.Users.Auth.Commands.Register
                         domainUser.Email.Value,
                         Token : null,
                         domainUser.Role.ToString(),
-                        Message : "Account created successfully. Please wait for Admin approval."
+                        Message : "Account created successfully. Please wait for Admin approval.",
+                        ProfileIsComplete : true
                     ));
                 }
 

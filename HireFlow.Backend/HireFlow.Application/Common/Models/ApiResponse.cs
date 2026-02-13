@@ -18,6 +18,8 @@ namespace HireFlow.Application.Common.Models
 
         public static ApiResponse FailResponse(string? message, IDictionary<string, string[]>? validationErrors = null)
             => new() { Success = false, Message = message, ValidationErrors = validationErrors };
+
+        
     }
 
     public class ApiResponse<T> : ApiResponse
@@ -27,8 +29,11 @@ namespace HireFlow.Application.Common.Models
         public static ApiResponse<T> SuccessResponse(T data, string? message = null)
             => new() { Success = true, Data = data, Message = message };
 
-        public static new ApiResponse<T> FailResponse(string? message)
+        public static ApiResponse<T> FailResponse(string? message)
             => new() { Success = false, Message = message, Data = default };
+
+        public static ApiResponse<T> Created(T data, string message = "Created successfully") 
+        => new() { Success = true, Data = data, Message = message };
     }
 
 }
