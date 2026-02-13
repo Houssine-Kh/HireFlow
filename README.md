@@ -9,8 +9,8 @@
 ## 🚀 Project Status
 
 > **Current Phase:** 🚧 MVP Development
-> **Completed:** Authentication, JWT Security, Candidate Profile Wizard.
-> **Next Up:** Admin Dashboard & Recruiter Approval Workflow.
+> **Completed:** Authentication, JWT Security, Candidate Profile Wizard, Admin Dashboard & Recruiter Approval Workflow.
+> **Next Up:** Job Management (Recruiter Side) : Recruiters need a dashboard where they can Create, Edit, and Close job postings..
 
 ---
 
@@ -135,7 +135,7 @@ HireFlow
 **Houssine Khafif**
 
 * **LinkedIn:** [linkedin.com/in/houssine-khafif](https://www.linkedin.com/in/houssine-khafif/)
-* **GitHub:** [@houssinekhafif](https://github.com/houssinekhafif)
+* **GitHub:** [@houssinekhafif](https://github.com/Houssine-Kh)
 * **Architecture:** Clean Architecture, Domain-Driven Design
 * **Focus:** Enterprise SaaS Development
 
