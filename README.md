@@ -9,8 +9,8 @@
 ## 🚀 Project Status
 
 > **Current Phase:** 🚧 MVP Development
-> **Completed:** Authentication, JWT Security, Candidate Profile Wizard, Admin Dashboard & Recruiter Approval Workflow.
-> **Next Up:** Job Management (Recruiter Side) : Recruiters need a dashboard where they can Create, Edit, and Close job postings..
+> **Completed:** Authentication, JWT Security, Candidate Profile Wizard, Admin Dashboard & Recruiter Approval Workflow, Job Management (Recruiter).
+> **Next Up:** **Job Discovery & Applications (Candidate Side)**: Candidates need to browse published jobs, view details, and submit applications.
 
 ---
 
@@ -22,7 +22,7 @@ HireFlow follows **Clean Architecture** principles with **CQRS** (Command Query 
 
 * **Core:** ASP.NET Core Web API
 * **Architecture:** Clean Architecture + Vertical Slices
-* **Patterns:** CQRS (MediatR), Repository Pattern, Unit of Work
+* **Patterns:** CQRS (MediatR), Repository Pattern, Unit of Work, REPR Pattern
 * **Validation:** FluentValidation
 * **Database:** SQL Server (EF Core)
 * **Logging:** Serilog
@@ -30,7 +30,7 @@ HireFlow follows **Clean Architecture** principles with **CQRS** (Command Query 
 ### **Frontend (Angular 21)**
 
 * **Framework:** Standalone Components
-* **State Management:** NGRX SignalStore (Signals)
+* **State Management:** NGRX SignalStore (Signals & Reactive State)
 * **UI Library:** PrimeNG (Aura Theme) + Tailwind CSS
 * **Architecture:** Modular Feature-Based Structure
 
@@ -52,11 +52,19 @@ HireFlow follows **Clean Architecture** principles with **CQRS** (Command Query 
 * **Profile Wizard:** A multi-step workflow triggered post-login to collect CVs, phone numbers, and LinkedIn URLs.
 * **Just-In-Time Application:** Candidates can browse jobs freely and are only prompted to complete their profile when attempting to apply.
 
-### 💼 3. Recruitment Management (In Progress)
+### 💼 3. Recruitment Management (New!)
 
-* **Job Posting:** Create and manage job openings with rich text descriptions.
-* **Applicant Tracking:** Kanban-style board for moving candidates through stages (Screening -> Interview -> Offer).
-* **Admin Panel:** Centralized dashboard for approving pending recruiter accounts.
+* **Job Dashboard:** Dedicated workspace for recruiters to view and filter their job postings.
+* **Lifecycle Management:** Full control over job status workflow:
+    * **Draft:** Create listings privately before going live.
+    * **Published:** Make jobs visible to candidates instantly.
+    * **Closed:** Stop receiving applications while keeping historical data.
+* **Reactive UI:** Instant feedback on actions (Create/Edit/Publish) using optimistic UI updates and Toast notifications.
+* **Rich Editing:** Detailed job descriptions with validation.
+
+### 🛡️ 4. Admin Governance
+
+* **Recruiter Approval:** Centralized dashboard for reviewing and approving pending recruiter accounts to maintain platform integrity.
 
 ---
 

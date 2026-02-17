@@ -30,9 +30,11 @@ export const API_CONFIG = {
       create: '/candidates' 
     },
     jobs: {
-        getAll: '/jobs',
-        getById: (id: string) => `/jobs/${id}`,
-        apply: (id: string) => `/jobs/${id}/apply`
+      getAll: '/jobs',                                       // GET /api/jobs
+      create: '/jobs',                                       // POST /api/jobs
+      update: (id: string) => `/jobs/${id}`,                 // PUT /api/jobs/{id}
+      publish: (id: string) => `/jobs/${id}/publish`,        // POST /api/jobs/{id}/publish
+      close: (id: string) => `/jobs/${id}/close`             // POST /api/jobs/{id}/close
     }
   }
 };

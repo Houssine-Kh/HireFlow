@@ -16,18 +16,23 @@ export class FeedbackService {
     this.messageService.add({ severity: 'error', summary, detail });
   }
 
-  info(detail: string) {
-    this.messageService.add({ severity: 'info', summary: 'Info', detail });
+info(detail: string, summary: string = 'Info') {
+    this.messageService.add({ severity: 'info', summary, detail });
   }
 
   // --- CONFIRMATION DIALOG ---
   
   // 
-  confirm(message: string, onAccept: () => void, header: string = 'Confirm Action') {
+confirm(
+    message: string, 
+    onAccept: () => void, 
+    header: string = 'Confirm Action',
+    icon: string = 'pi pi-exclamation-triangle' 
+  ) {
     this.confirmationService.confirm({
       message: message,
       header: header,
-      icon: 'pi pi-exclamation-triangle',
+      icon: icon,
       acceptButtonStyleClass: 'p-button-danger p-button-text',
       rejectButtonStyleClass: 'p-button-text p-button-plain',
       accept: onAccept

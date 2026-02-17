@@ -1,0 +1,152 @@
+<p-toast position="top-right"></p-toast>
+
+<div class="p-6 bg-surface-50 min-h-screen">
+    
+    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-surface-900">Jobs</h1>
+            <p class="text-surface-500">Manage your open positions and drafts.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+            <p-iconfield iconPosition="left">
+                <p-inputicon class="pi pi-search" />
+                <input 
+                    pInputText 
+                    type="text" 
+                    (input)="dt.filterGlobal($any($event.target).value, 'contains')" 
+                    placeholder="Search jobs..." 
+                    class="w-full md:w-64" />
+            </p-iconfield>
+
+<p-button 
+                label="New Job" 
+                icon="pi pi-plus" 
+                (onClick)="showCreateDialog()">
+            </p-button>
+
+<p-dialog 
+    header="Create New Job" 
+    [(visible)]="visible" 
+    [modal]="true" 
+    [style]="{ width: '30rem' }" 
+    [draggable]="false" 
+    [resizable]="false">
+    
+    <p class="text-surface-500 mb-4 block">Start by giving your job a title. You can add the details later.</p>
+
+    <form [formGroup]="createJobForm" (ngSubmit)="onCreateSubmit()">
+        
+        <div class="flex flex-col gap-2 mb-4">
+            <label for="title" class="font-medium text-surface-900">Job Title <span class="text-red-500">*</span></label>
+            <input 
+                pInputText 
+                id="title" 
+                formControlName="title" 
+                placeholder="e.g. Senior Product Designer" 
+                class="w-full" 
+                [class.ng-invalid]="createJobForm.get('title')?.invalid && createJobForm.get('title')?.touched"
+                [class.ng-dirty]="createJobForm.get('title')?.touched"
+            />
+            <small *ngIf="createJobForm.get('title')?.invalid && createJobForm.get('title')?.touched" class="text-red-500">
+                Title is required.
+            </small>
+        </div>
+
+        <div class="flex flex-col gap-2 mb-6">
+            <label for="workMode" class="font-medium text-surface-900">Work Mode</label>
+            <p-select 
+                    [options]="workModes" 
+                    formControlName="workMode" 
+                    optionLabel="label" 
+                    optionValue="value"
+                    placeholder="Select a mode (Optional)"
+                    [style]="{'width':'100%'}" 
+                    appendTo="body">
+                </p-select>
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <p-button label="Cancel" severity="secondary" (onClick)="visible = false" [text]="true"></p-button>
+            <p-button 
+                label="Create Draft" 
+                icon="pi pi-check" 
+                type="submit" 
+                [loading]="store.isLoading()"
+                [disabled]="createJobForm.invalid">
+            </p-button>
+        </div>
+    </form>
+</p-dialog>
+        </div>
+    </div>
+
+    <div class="card bg-surface-0 border border-surface-200 rounded-xl shadow-sm overflow-hidden">
+        <p-table 
+            #dt 
+            [value]="store.jobs()" 
+            [loading]="store.isLoading()"
+            [rows]="10" 
+            [paginator]="true"
+            [globalFilterFields]="['title', 'description', 'status', 'workMode']"
+            [tableStyle]="{ 'min-width': '60rem' }"
+            class="p-datatable-sm">
+            
+            <ng-template pTemplate="header">
+                <tr class="bg-surface-50 text-surface-500 text-sm uppercase tracking-wider">
+                    <th pSortableColumn="title" style="width:25%">
+                        Title <p-sortIcon field="title"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="description" style="width:35%">
+                        Description <p-sortIcon field="description"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="workMode" style="width:15%">
+                        Work Mode <p-sortIcon field="workMode"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="status" style="width:15%">
+                        Status <p-sortIcon field="status"></p-sortIcon>
+                    </th>
+                    <th style="width:10%" class="text-right">Actions</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-job>
+                <tr class="hover:bg-surface-50 transition-colors border-b border-surface-100">
+                    
+                    <td class="align-top py-4">
+                        <span class="font-medium text-surface-900 block">{{ job.title }}</span>
+                        <span class="text-xs text-surface-400 mt-1 font-mono">{{ job.id.substring(0,8) }}</span> 
+                    </td>
+
+                    <td class="align-top py-4">
+                        <div class="line-clamp-2 text-sm text-surface-600 leading-relaxed max-w-md">
+                            {{ job.description || 'No description provided.' }}
+                        </div>
+                    </td>
+                    
+                    <td class="align-top py-4">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-100 text-surface-700 border border-surface-200">
+                            {{ job.workMode }}
+                        </span>
+                    </td>
+
+                    <td class="align-top py-4">
+                        <p-tag [value]="job.status" [severity]="getSeverity(job.status)" [rounded]="true"></p-tag>
+                    </td>
+
+                    <td class="align-top py-4 text-right"> 
+                        <p-button 
+                            icon="pi pi-ellipsis-v" 
+                            [rounded]="true" 
+                            [text]="true" 
+                            severity="secondary"
+                            (onClick)="setSelectedJob(job); menu.toggle($event)">
+                        </p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+<p-menu #menu [model]="items" [popup]="true"></p-menu>
+
+</div>

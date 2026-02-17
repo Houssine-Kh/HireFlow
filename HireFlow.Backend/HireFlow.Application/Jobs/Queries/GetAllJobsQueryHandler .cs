@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HireFlow.Application.Common.Models;
 using HireFlow.Application.Jobs.Common;
 using HireFlow.Application.Users.Common;
+using HireFlow.Domain.Jobs.Entities;
 using HireFlow.Domain.Jobs.Repositories;
 using MediatR;
 
@@ -21,7 +22,7 @@ namespace HireFlow.Application.Jobs.Queries
         }
         public async Task<Result<List<JobDto>>> Handle(GetAllJobsQuery request, CancellationToken ct)
         {
-            var jobs = await _jobRepository.GetAllAsync();
+            var jobs = await _jobRepository.GetAllAsync() ?? new List<Job>();
 
             var dtos = jobs.Select(j => new JobDto(
                 j.Id,

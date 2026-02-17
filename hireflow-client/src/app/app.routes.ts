@@ -3,6 +3,7 @@ import { AdminLayout } from './features/admin/layout/admin-layout/admin-layout';
 import { UserManagement } from './features/admin/user-management/user-management';
 
 export const routes: Routes = [
+  
 // The default route 
   { 
     path: '', 
@@ -37,5 +38,13 @@ export const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: 'jobs',
+    loadComponent: () => import('./features/jobs/job-list/job-list').then(m => m.JobListComponent)
+  },
+  {
+    path: 'jobs/:id',
+    loadComponent : () => import('./features/jobs/job-edit/job-edit').then(m => m.JobEditComponent)
   }
 ];

@@ -14,4 +14,4 @@ namespace HireFlow.Application.Candidates.Commands.Common
         string? LinkedInUrl,
         string? EducationLevel
     );
-}
+}               

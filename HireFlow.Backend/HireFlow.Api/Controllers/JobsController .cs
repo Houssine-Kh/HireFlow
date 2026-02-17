@@ -63,7 +63,7 @@ namespace HireFlow.Api.Controllers
                     detail : result.Error
                 );
             
-            return Ok(ApiResponse<Guid>.SuccessResponse(result.Value,"Job created Succesfully."));
+            return Ok(ApiResponse<JobDto>.SuccessResponse(result.Value!,"Job created Succesfully."));
         }
 
         [HttpPost("{id}/publish")]
