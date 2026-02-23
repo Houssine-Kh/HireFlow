@@ -54,6 +54,29 @@ export const JobStore = signalStore(
             )    
         ),
 
+
+        loadMyJobs :rxMethod<void>(
+            pipe(
+                tap(() => patchState(store, { isLoading: true, error: null, validationErrors: {}, lastAction: null })),
+                switchMap(() =>
+                    jobService.getMyJobs().pipe(
+                        tapResponse({
+                            next: (response) => patchState(store, {jobs: response.data ?? [], isLoading: false}),
+                            error : (err : HttpErrorResponse) => {
+                                const parsedError = parseHttpError(err);
+                                patchState(store, {
+                                    isLoading : false,
+                                    error : parsedError.message,
+                                    validationErrors : normalizeValidationErrors(parsedError.validationErrors),
+                                    lastAction : null
+                                })
+                            }
+                        })
+                    )
+                )
+            )
+        ),
+
         createJob : rxMethod<CreateJobRequest>(
             pipe(
                 tap(() => patchState(store, {isLoading : true, error : null, validationErrors :{}, lastAction : null})),

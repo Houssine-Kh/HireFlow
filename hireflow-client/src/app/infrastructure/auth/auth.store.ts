@@ -63,7 +63,7 @@ export const AuthStore = signalStore(
                     break;
 
                   case 'Recruiter':
-                    //router.navigate(['/recruiter/dashboard']); 
+                    router.navigate(['/jobs']); 
                     break;
 
                   default:

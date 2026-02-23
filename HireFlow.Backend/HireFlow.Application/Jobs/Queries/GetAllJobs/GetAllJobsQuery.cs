@@ -6,7 +6,7 @@ using HireFlow.Application.Common.Models;
 using HireFlow.Application.Jobs.Common;
 using MediatR;
 
-namespace HireFlow.Application.Jobs.Queries
+namespace HireFlow.Application.Jobs.Queries.GetAllJobs
 {
     public record GetAllJobsQuery() : IRequest<Result<List<JobDto>>>;
 

@@ -16,6 +16,11 @@ export class JobService{
     getAllJobs(): Observable<ApiResponse<JobDto[]>> {
     return this.http.get<ApiResponse<JobDto[]>>(`${this.baseUrl}${API_CONFIG.endpoints.jobs.getAll}`);
   }
+
+  getMyJobs(): Observable<ApiResponse<JobDto[]>> {
+    return this.http.get<ApiResponse<JobDto[]>>(`${this.baseUrl}${API_CONFIG.endpoints.jobs.myJobs}`);
+  }
+
   createJob(request: CreateJobRequest): Observable<ApiResponse<JobDto>> { 
     return this.http.post<ApiResponse<JobDto>>(`${this.baseUrl}${API_CONFIG.endpoints.jobs.create}`, request);
   }

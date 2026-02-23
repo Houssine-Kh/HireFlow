@@ -8,8 +8,9 @@ namespace HireFlow.Domain.Jobs.Repositories
 {
     public interface IJobRepository
     {
-        Task<Job?> GetByIdAsync(Guid id);
-        Task<List<Job>> GetAllAsync();
-        Task AddAsync(Job job);
+        Task<Job?> GetByIdAsync(Guid id, CancellationToken ct = default);
+        Task<List<Job>> GetAllAsync(CancellationToken ct = default);
+        Task<List<Job>> GetByRecruiterIdAsync(Guid recruiterId, CancellationToken ct = default);
+        Task AddAsync(Job job, CancellationToken ct = default);
     }
 }

@@ -1,5 +1,6 @@
 using HireFlow.Domain.Jobs.Entities;
 using HireFlow.Domain.Jobs.Enums;
+using HireFlow.Domain.Users.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,6 +25,11 @@ namespace HireFlow.Infrastructure.Persistence.Configurations
 
             // Index RecruiterId for fast dashboard queries
             builder.HasIndex(j => j.RecruiterId);
+
+            builder.HasOne<User>()
+                   .WithMany()
+                   .HasForeignKey(j => j.RecruiterId)
+                   .OnDelete(DeleteBehavior.Restrict); // Prevent deleting a User if they have Jobs
 
             //  Save Enums as Strings 
             builder.Property(j => j.Status)

@@ -10,7 +10,7 @@ using HireFlow.Domain.Jobs.Entities;
 using HireFlow.Domain.Jobs.Repositories;
 using MediatR;
 
-namespace HireFlow.Application.Jobs.Queries
+namespace HireFlow.Application.Jobs.Queries.GetAllJobs
 {
     public class GetAllJobsQueryHandler : IRequestHandler<GetAllJobsQuery, Result<List<JobDto>>>
     {

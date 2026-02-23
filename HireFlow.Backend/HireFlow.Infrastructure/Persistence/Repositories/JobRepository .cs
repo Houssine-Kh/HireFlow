@@ -18,17 +18,24 @@ namespace HireFlow.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<Job?> GetByIdAsync(Guid id)
+        public async Task<Job?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             return await _context.Jobs.FirstOrDefaultAsync(j => j.Id == id);
         }
 
-        public async Task<List<Job>> GetAllAsync()
+        public async Task<List<Job>> GetAllAsync(CancellationToken ct = default)
         {
             return await _context.Jobs.ToListAsync();
         }
 
-        public async Task AddAsync(Job job)
+        public async Task<List<Job>> GetByRecruiterIdAsync(Guid recruiterId, CancellationToken ct = default)
+        {
+            return await _context.Jobs
+                .Where(j => j.RecruiterId == recruiterId)
+                .ToListAsync(ct);
+        }
+
+        public async Task AddAsync(Job job, CancellationToken ct = default)
         {
             await _context.Jobs.AddAsync(job);
         }

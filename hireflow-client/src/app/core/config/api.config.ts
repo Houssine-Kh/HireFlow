@@ -31,6 +31,7 @@ export const API_CONFIG = {
     },
     jobs: {
       getAll: '/jobs',                                       // GET /api/jobs
+      myJobs: '/jobs/my-jobs',                               // GET /api/jobs/my-jobs
       create: '/jobs',                                       // POST /api/jobs
       update: (id: string) => `/jobs/${id}`,                 // PUT /api/jobs/{id}
       publish: (id: string) => `/jobs/${id}/publish`,        // POST /api/jobs/{id}/publish
